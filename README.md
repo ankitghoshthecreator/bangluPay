@@ -2,21 +2,32 @@
 
 ## Offline Banking & Payment Platform
 
-BangluPay is an offline-first banking and payment application built around an existing **Transaction Engine** located at:
-
-```text
-E:\bangluPay\transaction-engine
-```
-
-The goal is to build a complete banking/payment simulation that can operate **without an Internet connection**, while using the existing transaction engine as the core transaction-processing component.
-
-The system should model real banking operations such as customer onboarding, account creation, identity verification, money transfers, UPI payments, inter-bank transactions, transaction history, account management, and banking operations.
-
-The existing transaction engine must first be inspected and tested before the payment application is built around it.
+BangluPay is an offline-first banking and payment simulation built around an existing **Transaction Engine**. The goal is to demonstrate the engineering architecture behind a complete banking/payment platform that models real banking operations—such as customer onboarding, account creation, identity verification, money transfers, UPI payments, and inter-bank transactions—while keeping the complete development environment local and **Offline Simulation**.
 
 ---
 
-# Project Overview
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [1. Transaction Engine Audit & Testing](#1-transaction-engine-audit--testing)
+- [2. Banking Core & Customer Management](#2-banking-core--customer-management)
+- [3. Account Management & KYC](#3-account-management--kyc)
+- [4. Payment & UPI System](#4-payment--upi-system)
+- [5. Inter-Bank Transfer System](#5-inter-bank-transfer-system)
+- [6. Ledger, Transactions & Reconciliation](#6-ledger-transactions--reconciliation)
+- [7. Security, Risk & Offline Architecture](#7-security-risk--offline-architecture)
+- [8. Testing, Simulation & Banking Dashboard](#8-testing-simulation--banking-dashboard)
+- [9. Android Mobile Application](#9-android-mobile-application)
+- [Core Architecture](#core-architecture)
+- [Offline Requirement](#offline-requirement)
+- [Important Financial Invariants](#important-financial-invariants)
+- [Development Order](#development-order)
+- [Definition of Done](#definition-of-done)
+- [Disclaimer](#disclaimer)
+
+---
+
+## Project Overview
 
 The project is divided into **9 major parts**:
 
@@ -36,114 +47,106 @@ The implementation should proceed sequentially. Do not start implementing later 
 
 # 1. Transaction Engine Audit & Testing
 
-The existing transaction engine is the foundation of the project.
+## Objective
+The existing **Transaction Engine** is the foundation of the project. The first objective is to establish whether the transaction engine actually works by inspecting it and creating a test suite. Do not modify the transaction engine unnecessarily. The payment application should consume the transaction engine through a clean interface.
 
+## Existing Transaction Engine
 Before writing the payment application, inspect:
 
-```text
-E:\bangluPay\transaction-engine
-```
+`E:\bangluPay\transaction-engine`
 
-Determine:
+## What Must Be Inspected
+Determine the following components and architectures:
+- Programming language
+- Framework
+- Project structure
+- Entry point
+- APIs/interfaces
+- Transaction model
+- Account model
+- Ledger implementation
+- Database/storage mechanism
+- Persistence mechanism
+- Transaction states
+- Concurrency handling
+- Idempotency support
+- Failure handling
+- Rollback mechanisms
+- Transaction validation
+- Balance calculation
+- Authentication/authorization
+- Existing tests
+- Configuration
+- Logging
+- Error handling
 
-* Programming language
-* Framework
-* Project structure
-* Entry point
-* APIs/interfaces
-* Transaction model
-* Account model
-* Ledger implementation
-* Database/storage mechanism
-* Persistence mechanism
-* Transaction states
-* Concurrency handling
-* Idempotency support
-* Failure handling
-* Rollback mechanisms
-* Transaction validation
-* Balance calculation
-* Authentication/authorization
-* Existing tests
-* Configuration
-* Logging
-* Error handling
-
-The first objective is to establish whether the transaction engine actually works.
-
-Create a test suite that verifies:
+## Transaction Test Cases
+Create a test suite that verifies standard operations. For example, a successful transfer:
 
 ```text
 Account A
-    |
-    | ₹1000
-    v
+   |
+   | ₹1000
+   v
 Account B
 ```
 
-After the transaction:
+After the transaction, balances should reflect:
 
 ```text
 Balance(A) = Balance(A_initial) - ₹1000
 Balance(B) = Balance(B_initial) + ₹1000
 ```
 
-Test:
-
-* Successful transaction
-* Insufficient balance
-* Invalid account
-* Duplicate transaction
-* Concurrent transactions
-* Failed transaction
-* Rollback
-* Partial failure
-* Negative amount
-* Zero amount
-* Transaction status
-* Transaction history
-* Persistence after restart
-
-Do not modify the transaction engine unnecessarily.
-
-The payment application should consume the transaction engine through a clean interface.
+Required testing scenarios:
+- Successful transaction
+- Insufficient balance
+- Invalid account
+- Duplicate transaction
+- Concurrent transactions
+- Failed transaction
+- Rollback
+- Partial failure
+- Negative amount
+- Zero amount
+- Transaction status
+- Transaction history
+- Persistence after restart
 
 ---
 
 # 2. Banking Core & Customer Management
 
-Build the banking domain around the transaction engine.
+## Objective
+Build the banking domain around the transaction engine to support robust customer relations.
 
-Core entities should include:
+## Core Entities
+Core models should include:
+- `Customer`
+- `Account`
+- `Bank`
+- `Branch`
+- `Transaction`
+- `Beneficiary`
+- `Payment`
+- `KYCRecord`
+- `UPIProfile`
+- `LedgerEntry`
 
-```text
-Customer
-Account
-Bank
-Branch
-Transaction
-Beneficiary
-Payment
-KYCRecord
-UPIProfile
-LedgerEntry
-```
-
+## Customer Management
 Customer management should support:
+- Customer registration
+- Customer profile
+- Customer ID generation
+- Contact information
+- Address
+- Date of birth
+- Account ownership
+- KYC status
+- Customer status
+- Account relationships
 
-* Customer registration
-* Customer profile
-* Customer ID generation
-* Contact information
-* Address
-* Date of birth
-* Account ownership
-* KYC status
-* Customer status
-* Account relationships
-
-Example:
-
+### Customer Relationships
 ```text
 Customer
    |
@@ -156,8 +159,7 @@ Customer
    +---- KYC Record
 ```
 
-Customer lifecycle:
-
+### Customer Lifecycle
 ```text
 REGISTERED
     ↓
@@ -174,46 +176,29 @@ SUSPENDED / CLOSED
 
 # 3. Account Management & KYC
 
-Implement complete account lifecycle management.
+## Objective
+Implement complete account lifecycle management including identity verification.
 
 ## Account Creation
+Support the following account types:
+- Savings account
+- Current account
+- Salary account
+- Basic account
 
-Support:
+Account creation should include fields such as: `Account Number`, `Customer ID`, `Bank ID`, `Branch ID`, `Account Type`, `Currency`, `Balance`, `Status`, and `Created At`.
 
-* Savings account
-* Current account
-* Salary account
-* Basic account
-
-Account creation should include:
-
-```text
-Account Number
-Customer ID
-Bank ID
-Branch ID
-Account Type
-Currency
-Balance
-Status
-Created At
-```
-
-Account states:
-
-```text
-PENDING
-ACTIVE
-FROZEN
-SUSPENDED
-CLOSED
-```
+### Account States
+| State       | Meaning                           |
+| ----------- | --------------------------------- |
+| `PENDING`   | Account creation is pending       |
+| `ACTIVE`    | Account is operational            |
+| `FROZEN`    | Account is temporarily frozen     |
+| `SUSPENDED` | Account operations are restricted |
+| `CLOSED`    | Account is permanently closed     |
 
 ## Account Deletion / Closure
-
-Do not simply delete financial records.
-
-Account closure should be a controlled banking operation:
+Do not simply delete financial records. Account closure should be a controlled banking operation where historical transactions remain available.
 
 ```text
 ACTIVE
@@ -227,13 +212,8 @@ BALANCE_SETTLED
 CLOSED
 ```
 
-Historical transactions must remain available after closure.
-
 ## Aadhaar Verification
-
-Because the system must work without Internet access, Aadhaar verification should initially be implemented as an **offline mock/simulation**, not as a real UIDAI verification system.
-
-Example:
+Because the system must work without Internet access, Aadhaar verification should initially be implemented as an **Offline Simulation**, not as a real UIDAI verification system. Never store Aadhaar numbers in plaintext.
 
 ```text
 Aadhaar Number
@@ -245,13 +225,8 @@ Mock Aadhaar Registry
 VERIFIED / FAILED
 ```
 
-Never store Aadhaar numbers in plaintext.
-
 ## PAN Verification
-
-Similarly, PAN verification should initially use a local mock verification service.
-
-Example:
+Similarly, PAN verification should initially use a local mock verification service. The architecture should keep the verification service behind an interface so that a real regulated verification provider could theoretically be integrated later.
 
 ```text
 PAN
@@ -263,18 +238,14 @@ Verification
 VALID / INVALID
 ```
 
-The architecture should keep the verification service behind an interface so that a real regulated verification provider could theoretically be integrated later.
-
 ---
 
 # 4. Payment & UPI System
 
+## Objective
 Implement the payment layer on top of the transaction engine.
 
-The payment system should support:
-
-### Internal Bank Transfer
-
+## Internal Bank Transfer
 ```text
 Account A
     ↓
@@ -283,34 +254,26 @@ Transaction Service
 Account B
 ```
 
-### UPI
-
-Implement a simulated offline UPI ecosystem.
-
-Example:
-
-```text
-ankit@banglupay
-rahul@anotherbank
-```
+## UPI
+Implement a simulated offline UPI ecosystem. Example VPA addresses: `ankit@banglupay` and `rahul@anotherbank`.
 
 UPI functionality should include:
+- UPI ID creation
+- UPI ID lookup
+- UPI PIN simulation
+- Payment initiation
+- Payment authorization
+- Payment processing
+- Payment status
+- Payment history
+- Refund
+- Payment reversal
+- Failed payment
+- Duplicate payment protection
 
-* UPI ID creation
-* UPI ID lookup
-* UPI PIN simulation
-* Payment initiation
-* Payment authorization
-* Payment processing
-* Payment status
-* Payment history
-* Refund
-* Payment reversal
-* Failed payment
-* Duplicate payment protection
+Every payment must have a unique `paymentId`, `transactionId`, and `referenceNumber`. **Idempotency** must prevent the same payment request from being processed twice.
 
-Payment lifecycle:
-
+### Payment Lifecycle
 ```text
 INITIATED
     ↓
@@ -321,52 +284,27 @@ PROCESSING
 SUCCESS
 ```
 
-Failure paths:
-
+### Failure Paths
 ```text
 INITIATED
     ↓
 FAILED
 ```
-
 or:
-
 ```text
 PROCESSING
     ↓
 REVERSED
 ```
 
-Every payment must have a unique:
-
-```text
-paymentId
-transactionId
-referenceNumber
-```
-
-Idempotency must prevent the same payment request from being processed twice.
-
 ---
 
 # 5. Inter-Bank Transfer System
 
-Create multiple simulated banks inside the offline environment.
+## Objective
+Create multiple simulated banks inside the offline environment. These are simulated institutions, not real banking integrations. Examples include `BangluPay Bank`, `State Bank Simulator`, `HDFC Simulator`, `ICICI Simulator`, and `Axis Simulator`.
 
-Example:
-
-```text
-BangluPay Bank
-State Bank Simulator
-HDFC Simulator
-ICICI Simulator
-Axis Simulator
-```
-
-These are simulated institutions, not real banking integrations.
-
-Example:
-
+### Inter-Bank Transfer Flow
 ```text
 Bank A
 Account A
@@ -380,39 +318,35 @@ Bank B
 Account B
 ```
 
-Support:
+## Supported Features
+- Internal transfers
+- Inter-bank transfers
+- Beneficiary creation
+- Beneficiary validation
+- Transfer limits
+- Transfer status
+- Failed transfers
+- Reversals
+- Refunds
+- Transaction references
 
-* Internal transfers
-* Inter-bank transfers
-* Beneficiary creation
-* Beneficiary validation
-* Transfer limits
-* Transfer status
-* Failed transfers
-* Reversals
-* Refunds
-* Transaction references
+## Simulated Banking Rails
+- `UPI`
+- `IMPS`
+- `NEFT`
+- `RTGS`
 
-Simulate banking rails such as:
-
-```text
-UPI
-IMPS
-NEFT
-RTGS
-```
-
-However, these should be explicitly represented as **offline simulations**, because the real payment networks require external infrastructure and regulated access.
+*These should be explicitly represented as offline simulations, because the real payment networks require external infrastructure and regulated access.*
 
 ---
 
 # 6. Ledger, Transactions & Reconciliation
 
-The financial ledger must be treated as the source of truth.
+## Objective
+The financial ledger must be treated as the source of truth, maintaining a reliable **Double-entry Ledger**.
 
-A transaction should produce corresponding ledger entries.
-
-For a transfer:
+## Double-Entry Accounting
+A transaction should produce corresponding ledger entries. For a transfer:
 
 ```text
 Account A
@@ -422,98 +356,58 @@ Account B
 Credit ₹1000
 ```
 
-The fundamental invariant should be:
-
-```text
-Total Debits = Total Credits
-```
-
-For every successful double-entry transaction:
-
-```text
-Σ Debit = Σ Credit
-```
-
-Maintain:
-
-* Transaction ID
-* Account ID
-* Debit/Credit
-* Amount
-* Currency
-* Timestamp
-* Transaction type
-* Reference
-* Status
-* Source
-* Destination
-* Metadata
-
-Support:
-
-* Transaction history
-* Statements
-* Balance calculation
-* Ledger inspection
-* Daily reconciliation
-* Failed transaction reconciliation
-* Reversal
-* Refund
-* Audit logs
-
 Never physically remove completed financial transactions merely because an account is closed.
+
+## Ledger Maintenance
+Maintain the following fields for each entry:
+- Transaction ID
+- Account ID
+- Debit/Credit
+- Amount
+- Currency
+- Timestamp
+- Transaction type
+- Reference
+- Status
+- Source
+- Destination
+- Metadata
+
+## Supported Operations
+- Transaction history
+- Statements
+- Balance calculation
+- Ledger inspection
+- Daily reconciliation
+- Failed transaction reconciliation
+- Reversal
+- Refund
+- Audit logs
 
 ---
 
 # 7. Security, Risk & Offline Architecture
 
-The entire application must work without Internet access.
+## Objective
+The entire application must work without Internet access using robust internal security controls. Security-sensitive data should never be stored as plaintext.
 
-The architecture should therefore be:
+## Required Implementations
+- Authentication
+- Authorization
+- Password hashing
+- PIN hashing
+- Role-based access control
+- Secure secrets
+- Input validation
+- Transaction authorization
+- Rate limiting
+- Idempotency
+- Audit logging
+- Account locking
+- Suspicious transaction detection
+- Transaction limits
 
-```text
-                    OFFLINE MACHINE
-                         |
-             +-----------+-----------+
-             |                       |
-        Payment API             Banking UI
-             |                       |
-             +-----------+-----------+
-                         |
-                  Banking Services
-                         |
-              +----------+----------+
-              |                     |
-        Payment Service       KYC Service
-              |                     |
-              +----------+----------+
-                         |
-                Transaction Engine
-                         |
-                    Ledger/DB
-```
-
-No external network dependency should be required for normal operation.
-
-Implement:
-
-* Authentication
-* Authorization
-* Password hashing
-* PIN hashing
-* Role-based access control
-* Secure secrets
-* Input validation
-* Transaction authorization
-* Rate limiting
-* Idempotency
-* Audit logging
-* Account locking
-* Suspicious transaction detection
-* Transaction limits
-
-Example roles:
-
+## Example Roles
 ```text
 CUSTOMER
 BANK_EMPLOYEE
@@ -522,39 +416,18 @@ SYSTEM_ADMIN
 AUDITOR
 ```
 
-Security-sensitive data should never be stored as plaintext.
-
-The project should clearly distinguish between:
-
-```text
-Simulation
-```
-
-and
-
-```text
-Real Banking Infrastructure
-```
-
-This project must not claim to perform real Aadhaar, PAN, UPI, IMPS, NEFT, or RTGS operations.
-
 ---
 
 # 8. Testing, Simulation & Banking Dashboard
 
+## Objective
 The final part combines system testing with a usable banking interface.
 
-## Testing
+## Testing Strategy
+Create automated tests covering various levels.
 
-Create automated tests for:
-
-### Unit Tests
-
-Test individual services.
-
-### Integration Tests
-
-Test:
+### Unit & Integration Tests
+Test individual services and integration paths:
 
 ```text
 Payment Service
@@ -567,9 +440,6 @@ Database
 ```
 
 ### End-to-End Tests
-
-Example:
-
 ```text
 Create Customer
       ↓
@@ -589,77 +459,70 @@ Verify Receiver Balance
 ```
 
 ### Failure Tests
-
-Test:
-
-* Insufficient funds
-* Invalid account
-* Invalid UPI ID
-* Invalid PIN
-* Duplicate request
-* Concurrent payments
-* Database failure
-* Transaction engine failure
-* Interrupted transaction
-* Invalid KYC
-* Frozen account
-* Closed account
+Ensure to test for:
+- Insufficient funds
+- Invalid account
+- Invalid UPI ID
+- Invalid PIN
+- Duplicate request
+- Concurrent payments
+- Database failure
+- Transaction engine failure
+- Interrupted transaction
+- Invalid KYC
+- Frozen account
+- Closed account
 
 ## Banking Dashboard
+Create a UI that exposes functionalities based on user role.
 
-Create a UI that exposes:
+### Customer Dashboard
+- Dashboard
+- Balance
+- Account details
+- Transaction history
+- UPI
+- Transfer money
+- Beneficiaries
+- Statements
+- Profile
+- KYC status
 
-### Customer
-
-* Dashboard
-* Balance
-* Account details
-* Transaction history
-* UPI
-* Transfer money
-* Beneficiaries
-* Statements
-* Profile
-* KYC status
-
-### Bank Admin
-
-* Customers
-* Accounts
-* Transactions
-* Pending KYC
-* Suspicious transactions
-* Account management
-* Transaction monitoring
-* Reconciliation
-* Audit logs
+### Bank Admin Dashboard
+- Customers
+- Accounts
+- Transactions
+- Pending KYC
+- Suspicious transactions
+- Account management
+- Transaction monitoring
+- Reconciliation
+- Audit logs
 
 ---
 
 # 9. Android Mobile Application
 
-The frontend is a native Android application built with Kotlin and XML layouts, located in the `transaction/` directory. It integrates directly with the backend API to simulate user-facing banking activities.
+## Objective
+The frontend is a native Android application built with Kotlin and XML layouts, located in the `transaction/` directory. It integrates directly with the backend API to simulate user-facing banking activities. All APIs are invoked on the local Spring Boot backend using Retrofit with zero external network dependencies.
 
+## Application Screens
 The flow consists of three primary screens:
-1. **Login (`LoginActivity`)**: The secure entry point, verifying the user's registered mobile number.
-2. **Register (`RegisterActivity`)**: The portal to onboard new users to the banking ecosystem.
-3. **Dashboard (`DashboardActivity`)**: The core financial hub allowing users to:
-   - Check real-time `Available Balance`.
-   - Access their unique User `QR Code` for receiving payments.
-   - Use `Scan to Pay` functionality to initiate secure transfers.
-
-All APIs are invoked on the local Spring Boot backend using Retrofit with zero external network dependencies.
+1. `LoginActivity`: The secure entry point, verifying the user's registered mobile number.
+2. `RegisterActivity`: The portal to onboard new users to the banking ecosystem.
+3. `DashboardActivity`: The core financial hub allowing users to:
+   - Check real-time Available Balance.
+   - Access their unique User QR Code for receiving payments.
+   - Use Scan to Pay functionality to initiate secure transfers.
 
 ---
 
 # Core Architecture
 
 The most important architectural rule is:
+> The **Transaction Engine** remains the financial transaction core. The Payment Application orchestrates banking operations around it.
 
-> The Transaction Engine remains the financial transaction core. The Payment Application orchestrates banking operations around it.
-
-Recommended separation:
-
+## Recommended Separation
 ```text
 bangluPay/
 │
@@ -678,7 +541,7 @@ bangluPay/
     └── dashboard/
 ```
 
-The exact architecture must be adjusted after inspecting the existing transaction engine.
+*The exact architecture must be adjusted after inspecting the existing transaction engine.*
 
 ---
 
@@ -692,22 +555,19 @@ Ethernet DISCONNECTED
 Internet UNAVAILABLE
 ```
 
-All core functionality must operate locally.
-
-External APIs should not be required for:
-
-* Account creation
-* Account closure
-* KYC simulation
-* PAN simulation
-* Aadhaar simulation
-* UPI simulation
-* Bank transfer
-* Inter-bank transfer
-* Transaction history
-* Ledger
-* Statements
-* Reconciliation
+All core functionality must operate locally. External APIs should not be required for:
+- Account creation
+- Account closure
+- KYC simulation
+- PAN simulation
+- Aadhaar simulation
+- UPI simulation
+- Bank transfer
+- Inter-bank transfer
+- Transaction history
+- Ledger
+- Statements
+- Reconciliation
 
 External integrations may be added later as optional adapters.
 
@@ -715,38 +575,26 @@ External integrations may be added later as optional adapters.
 
 # Important Financial Invariants
 
-The system must preserve financial correctness.
+The system must preserve financial correctness. Briefly, this ensures money is never created or destroyed without tracking.
 
-For every successful transaction:
-
+## Balance Calculation
 ```text
-Source Balance_new
-=
-Source Balance_old - Amount
+Source Balance_new = Source Balance_old - Amount
+
+Destination Balance_new = Destination Balance_old + Amount
 ```
 
-and:
-
-```text
-Destination Balance_new
-=
-Destination Balance_old + Amount
-```
-
-For the complete ledger:
-
+## Double-Entry Equality
 ```text
 Σ Debits = Σ Credits
 ```
 
-For every transaction:
-
+## Transaction Uniqueness
 ```text
 transactionId ≠ transactionId of every other transaction
 ```
 
-For idempotent requests:
-
+## Idempotency Rules
 ```text
 same idempotencyKey
         ↓
@@ -755,15 +603,11 @@ same transaction result
 no duplicate financial movement
 ```
 
-These invariants should be tested automatically.
-
 ---
 
 # Development Order
 
-Do not build everything simultaneously.
-
-Use this order:
+Do not build everything simultaneously. Use this sequential order:
 
 ```text
 1. Inspect Transaction Engine
@@ -789,7 +633,7 @@ Use this order:
 
 # Definition of Done
 
-The project is considered functional when the following complete workflow works offline:
+The project is considered functional when the following complete workflow works offline. The complete workflow must continue working with the Internet disconnected.
 
 ```text
 Create Customer
@@ -821,28 +665,20 @@ Statement
 Reconciliation
 ```
 
-And the entire workflow continues to work with the Internet disconnected.
-
 ---
 
 # Disclaimer
 
-BangluPay is an offline banking/payment **simulation and engineering project**.
+BangluPay is an offline banking/payment **Simulation and Engineering Project**. Real-world financial services require regulated infrastructure, authentication mechanisms, security controls, compliance procedures, and authorized integrations. 
 
-It does not connect to or perform transactions through real:
+## Simulation vs Real Banking Infrastructure
+- Aadhaar verification is simulated locally.
+- PAN verification is simulated locally.
+- UPI is simulated.
+- IMPS is simulated.
+- NEFT is simulated.
+- RTGS is simulated.
+- Other banks are simulated.
+- **No real banking network is accessed.**
 
-* UPI
-* NPCI
-* Aadhaar
-* UIDAI
-* PAN verification systems
-* Banks
-* IMPS
-* NEFT
-* RTGS
-
-Real-world financial services require regulated infrastructure, authentication mechanisms, security controls, compliance procedures, and authorized integrations.
-
-The purpose of this project is to demonstrate the engineering architecture behind a banking/payment platform while keeping the complete development environment local and offline.# bangluPay
-#   b a n g l u P a y  
- 
+The purpose of this project is to demonstrate the engineering architecture behind a banking/payment platform while keeping the complete development environment local and offline.
