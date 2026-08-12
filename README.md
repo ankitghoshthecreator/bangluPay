@@ -18,7 +18,7 @@ The existing transaction engine must first be inspected and tested before the pa
 
 # Project Overview
 
-The project is divided into **8 major parts**:
+The project is divided into **9 major parts**:
 
 1. **Transaction Engine Audit & Testing**
 2. **Banking Core & Customer Management**
@@ -28,6 +28,7 @@ The project is divided into **8 major parts**:
 6. **Ledger, Transactions & Reconciliation**
 7. **Security, Risk & Offline Architecture**
 8. **Testing, Simulation & Banking Dashboard**
+9. **Android Mobile Application**
 
 The implementation should proceed sequentially. Do not start implementing later modules until the dependencies of the earlier modules have been understood and tested.
 
@@ -635,6 +636,22 @@ Create a UI that exposes:
 
 ---
 
+# 9. Android Mobile Application
+
+The frontend is a native Android application built with Kotlin and XML layouts, located in the `transaction/` directory. It integrates directly with the backend API to simulate user-facing banking activities.
+
+The flow consists of three primary screens:
+1. **Login (`LoginActivity`)**: The secure entry point, verifying the user's registered mobile number.
+2. **Register (`RegisterActivity`)**: The portal to onboard new users to the banking ecosystem.
+3. **Dashboard (`DashboardActivity`)**: The core financial hub allowing users to:
+   - Check real-time `Available Balance`.
+   - Access their unique User `QR Code` for receiving payments.
+   - Use `Scan to Pay` functionality to initiate secure transfers.
+
+All APIs are invoked on the local Spring Boot backend using Retrofit with zero external network dependencies.
+
+---
+
 # Core Architecture
 
 The most important architectural rule is:
@@ -827,6 +844,9 @@ It does not connect to or perform transactions through real:
 Real-world financial services require regulated infrastructure, authentication mechanisms, security controls, compliance procedures, and authorized integrations.
 
 The purpose of this project is to demonstrate the engineering architecture behind a banking/payment platform while keeping the complete development environment local and offline.
-#   b a n g l u P a y  
+#   b a n g l u P a y 
+ 
+ #   b a n g l u P a y 
+ 
  #   b a n g l u P a y  
  
