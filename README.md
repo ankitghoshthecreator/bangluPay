@@ -843,4 +843,5 @@ It does not connect to or perform transactions through real:
 
 Real-world financial services require regulated infrastructure, authentication mechanisms, security controls, compliance procedures, and authorized integrations.
 
-The purpose of this project is to demonstrate the engineering architecture behind a banking/payment platform while keeping the complete development environment local and offline.
+The purpose of this project is to demonstrate the engineering architecture behind a banking/payment platform while keeping the complete development environment local and offline.#   b a n g l u P a y  
+ 
