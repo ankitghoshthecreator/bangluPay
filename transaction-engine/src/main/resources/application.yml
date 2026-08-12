@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: nexus-engine
+  datasource:
+    url: jdbc:sqlite:nexus.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: 8081
+
+logging:
+  level:
+    root: INFO
+    engine.nexus: DEBUG
+    org.hibernate.SQL: DEBUG

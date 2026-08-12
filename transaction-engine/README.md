@@ -1,52 +1,133 @@
-# Ankit Bank Full-Stack Platform
+📌 Exactly-Once Payment Processing System
+🧠 Overview
 
-Welcome to the **Ankit Bank** ecosystem. This complete project consists of a fault-tolerant payment processing backend and a clean, natively integrated Android mobile application. 
+This project implements a fault-tolerant payment processing system that guarantees exactly-once money movement across distributed services.
 
-The architecture is split into two primary components:
+In real-world banking systems, retries, timeouts, and partial failures can lead to:
 
----
+Duplicate debits
+Missing credits
+Inconsistent balances
 
-## 1. Nexus Transaction Engine (Backend)
-Located in the `transaction-engine/` directory.
+This system addresses those issues using idempotency, state machines, and a double-entry ledger, ensuring financial correctness under failure conditions.
 
-This module implements a robust, exactly-once payment processing system that guarantees safe money movement across distributed services using a double-entry ledger.
+🚨 Problem Statement
 
-### Key Features:
-- **Exactly-Once Semantics:** Prevents duplicate debits/credits using an advanced idempotency layer.
-- **Double-Entry Ledger:** Ensures total debit strictly equals total credit; no money is accidentally created or destroyed.
-- **State Machine Architecture:** Handles partial failures, retries, and concurrent transaction requests deterministically.
-- **Technology Stack:** Java 22, Spring Boot, Virtual Threads, SQLite.
+Distributed financial systems cannot rely on simple request-response guarantees due to:
 
----
+Network retries
+Service crashes
+Concurrent requests
+Partial transaction execution
 
-## 2. Ankit Bank Mobile App (Frontend)
-Located in the `transaction/` directory.
+The challenge is to ensure:
 
-The frontend is a clean, native Android application built using Kotlin and XML layouts representing the user-facing side of the Nexus Transaction Engine. It follows a direct 3-page structural flow:
+Money is neither created nor destroyed, and every transaction executes exactly once.
 
-### App Flow:
-1. **Login (`LoginActivity`)**: The secure entry point, verifying the user's mobile number.
-2. **Register (`RegisterActivity`)**: The portal to onboard new users to Ankit Bank.
-3. **Dashboard (`DashboardActivity`)**: The core financial hub where users can:
-   - Check their real-time `Available Balance`.
-   - Access their unique User `QR Code` for receiving payments.
-   - Use the `Scan to Pay` functionality to initiate a secure transaction.
+🏗️ System Design
+🔁 Transaction Lifecycle (State Machine)
+INIT → AUTHORIZED → SETTLED
+        ↓
+      FAILED
+INIT → Transaction created
+AUTHORIZED → Debit validated
+SETTLED → Debit + Credit completed
+FAILED → Transaction aborted safely
+💰 Double-Entry Ledger
 
----
+Every transaction is recorded as:
 
-## Getting Started
+Account	Debit	Credit
+Sender Account	100	
+Receiver Account		100
 
-### To run the Backend:
-1. Navigate to the `transaction-engine` directory.
-2. Ensure you have Java 22+ and Maven installed.
-3. Run `mvn spring-boot:run` to launch the API and database environment.
+✔ Ensures:
 
-### To build the Mobile App:
-1. Open the `transaction` directory in Android Studio.
-2. Sync the Gradle project files.
-3. Build and launch the APK onto an Android Emulator (`./gradlew assembleDebug`).
+Total Debit = Total Credit
+No money creation/destruction
+🔐 Idempotency Layer
 
----
+Each request includes an Idempotency Key:
 
-**Author:** Ankit Ghosh
-**Project Type:** Comprehensive Full-Stack Banking Simulation
+Prevents duplicate execution
+Returns same response for repeated requests
+Handles retries safely
+⚙️ Core Components
+API Layer → Accepts transaction requests
+Idempotency Service → Deduplicates requests
+Transaction Engine → Manages state transitions
+Ledger Service → Maintains financial records
+Database → Persistent storage
+Cache (Redis) → Fast idempotency + locking
+🧪 Failure Handling
+
+System is designed to handle:
+
+🔁 Duplicate API retries
+⏱️ Timeout after debit but before credit
+💥 Service crash during processing
+⚔️ Concurrent transaction requests
+Recovery Strategy
+Replay-safe operations
+State-based recovery
+Ledger invariants validation
+🔍 Key Features
+Exactly-once transaction processing
+Strong financial consistency
+Replay-safe architecture
+Deterministic state transitions
+Double-entry accounting system
+Failure simulation and recovery
+🛠️ Tech Stack
+Language: Java
+Framework: Spring Boot
+Database: SQLite (Production-ready ACID compliance)
+Concurrency: Java 22 Virtual Threads
+Architecture: REST APIs + Double-Entry Ledger
+📂 Project Structure
+/src
+ ├── controller       # API endpoints
+ ├── service          # Business logic
+ ├── engine           # Transaction state machine
+ ├── ledger           # Double-entry system
+ ├── repository       # Database access
+ ├── model            # Entities
+ └── config           # Configurations
+🚀 How It Works (Flow)
+Client sends transaction request with idempotency key
+System checks if request already processed
+If new:
+Create transaction (INIT)
+Move to AUTHORIZED
+Execute debit + credit
+Move to SETTLED
+Ledger updated with both entries
+Response returned
+🧩 Challenges Addressed
+Ensuring exactly-once semantics without distributed locks
+Handling partial failures safely
+Maintaining ledger consistency under concurrency
+Designing replay-safe transaction processing
+📊 Future Improvements
+Kafka-based event streaming
+Distributed tracing (OpenTelemetry)
+Multi-currency ledger support
+Horizontal scaling with sharding
+Stronger consistency via consensus mechanisms
+🎯 Key Learnings
+Financial systems require strong invariants, not eventual consistency
+Idempotency is critical for safe retries
+State machines simplify complex workflows
+Ledger design is central to system correctness
+⚠️ Disclaimer
+
+This project is a simulation of real-world financial systems designed for learning and demonstration purposes.
+It does not represent a production-ready banking system.
+
+👨‍💻 Author
+
+Ankit Ghosh
+
+⭐ If you found this useful
+
+Give it a star ⭐ and feel free to fork or contribute!
