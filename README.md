@@ -681,5 +681,4 @@ BangluPay is an offline banking/payment **Simulation and Engineering Project**. 
 - Other banks are simulated.
 - **No real banking network is accessed.**
 
-The purpose of this project is to demonstrate the engineering architecture behind a banking/payment platform while keeping the complete development environment local and offline.#   b a n g l u P a y  
- 
+The purpose of this project is to demonstrate the engineering architecture behind a banking/payment platform while keeping the complete development environment local and offline.
