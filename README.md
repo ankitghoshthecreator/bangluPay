@@ -27,21 +27,21 @@ BangluPay is an offline-first banking and payment simulation built around an exi
 
 ---
 
-## Project Overview
+# Project Overview
 
-The project is divided into **9 major parts**:
+The project is divided into **9 major parts**. Each part must be completed sequentially — do not start a later module until the dependencies of the earlier modules have been understood and tested.
 
-1. **Transaction Engine Audit & Testing**
-2. **Banking Core & Customer Management**
-3. **Account Management & KYC**
-4. **Payment & UPI System**
-5. **Inter-Bank Transfer System**
-6. **Ledger, Transactions & Reconciliation**
-7. **Security, Risk & Offline Architecture**
-8. **Testing, Simulation & Banking Dashboard**
-9. **Android Mobile Application**
-
-The implementation should proceed sequentially. Do not start implementing later modules until the dependencies of the earlier modules have been understood and tested.
+| # | Part | Description |
+|---|------|-------------|
+| 1 | **Transaction Engine Audit & Testing** | Inspect, verify, and test the existing engine before building on top of it |
+| 2 | **Banking Core & Customer Management** | Define domain entities and implement customer registration and lifecycle |
+| 3 | **Account Management & KYC** | Implement account creation, states, closure flow, and offline KYC simulation |
+| 4 | **Payment & UPI System** | Build the UPI payment layer on top of the transaction engine |
+| 5 | **Inter-Bank Transfer System** | Simulate multiple banks and payment rails (UPI, IMPS, NEFT, RTGS) |
+| 6 | **Ledger, Transactions & Reconciliation** | Implement double-entry ledger, statements, and reconciliation |
+| 7 | **Security, Risk & Offline Architecture** | Add RBAC, audit logging, PIN/password hashing, and risk detection |
+| 8 | **Testing, Simulation & Banking Dashboard** | Write full test suite and build the banking web dashboard UI |
+| 9 | **Android Mobile Application** | Native Kotlin app (Login, Register, Dashboard) connected to the local backend |
 
 ---
 
