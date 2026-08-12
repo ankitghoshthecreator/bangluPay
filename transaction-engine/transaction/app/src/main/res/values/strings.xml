@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ankit-bank</string>
+    <string name="login_title">Welcome to ankit-bank</string>
+    <string name="mobile_number_hint">Mobile Number</string>
+    <string name="name_hint">Full Name</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="not_registered">Not registered? Register here</string>
+    <string name="balance_label">Available Balance</string>
+    <string name="scan_to_pay">Scan QR to Pay</string>
+    <string name="demo_balance">₹ 5,000.00</string>
+    <string name="my_qr_code">My QR Code</string>
+</resources>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="top|center_horizontal"
+    android:padding="24dp"
+    android:background="@color/colorBackground">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/balance_label"
+        android:textSize="18sp"
+        android:textColor="@color/colorTextSecondary"
+        android:layout_marginTop="32dp" />
+
+    <TextView
+        android:id="@+id/tvBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/demo_balance"
+        android:textSize="42sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginBottom="48dp" />
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:elevation="4dp"
+        android:layout_marginBottom="16dp">
+        
+        <View
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:background="@color/black" />
+            
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/my_qr_code"
+        android:textSize="14sp"
+        android:textColor="@color/colorTextSecondary"
+        android:layout_marginBottom="48dp" />
+
+    <Button
+        android:id="@+id/btnScanToPay"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/scan_to_pay"
+        android:textSize="18sp"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="@color/white" />
+
+</LinearLayout>
