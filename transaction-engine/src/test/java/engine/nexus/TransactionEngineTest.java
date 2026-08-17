@@ -52,6 +52,20 @@ public class TransactionEngineTest {
         transactionRepository.deleteAll();
         accountRepository.deleteAll();
 
+        // Re-seed system cash account since deleteAll removed it
+        if (!accountRepository.existsById(engine.nexus.config.DataInitializer.SYSTEM_CASH_ID)) {
+            accountRepository.save(Account.builder()
+                    .accountId(engine.nexus.config.DataInitializer.SYSTEM_CASH_ID)
+                    .accountNumber("SYSTEM-CASH-0001")
+                    .holderName("SYSTEM_CASH")
+                    .balance(BigDecimal.ZERO.setScale(2))
+                    .currency("INR")
+                    .status(Account.AccountStatus.ACTIVE)
+                    .accountType(Account.AccountType.CURRENT)
+                    .bankId(engine.nexus.config.DataInitializer.BANK_BNGL_ID)
+                    .build());
+        }
+
         accountA = accountService.createAccount("Alice", "INR");
         accountA.setBalance(new BigDecimal("10000.00"));
         accountA = accountRepository.save(accountA);
